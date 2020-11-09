@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Williams_AR_TestScene.unity
+    guid: f042d6432c5492c4790be5eab8654e12
   m_configObjects: {}
