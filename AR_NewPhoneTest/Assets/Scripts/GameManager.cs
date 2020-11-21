@@ -11,7 +11,15 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
-    //Interactive Variables
+    //Game state variables
     public bool sunCovered = false;
+
+    //Player spawning variables
+    public GameObject spawnPoint;
+    public GameObject player;
+
+    public void SpawnPlayer() { //Spawn the player when called (called from NavMeshRest.cs)
+        Instantiate(player, spawnPoint.transform.position, Quaternion.identity);
+    }
 
 }

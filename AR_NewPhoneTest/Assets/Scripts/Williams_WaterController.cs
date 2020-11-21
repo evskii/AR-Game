@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Williams_WaterController : MonoBehaviour
 {
+    /* Used to control the waters state in the game (frozen or not)
+     */
+
     //Singleton creation
     public static Williams_WaterController instance;
 
@@ -11,21 +15,25 @@ public class Williams_WaterController : MonoBehaviour
         instance = this;
     }
 
+    
+    public bool frozen = false; //Waters state (frozen or not)
 
-    public bool frozen = false;
+    public Material materialWater; //The material that the water uses in the game
+    public Color water; //Colour for when its water
+    public Color ice; //Colour for when its ice
 
-    public Material materialWater;
-    public Color water;
-    public Color ice;
+    private NavMeshObstacle blocker; //The navmeshblocker that allows the player to move over the water or not
 
-    public BoxCollider blocker;
+    private void Start() {
+        blocker = GetComponent<NavMeshObstacle>();
+    }
 
 
     public void Freeze(bool freeze) {
-        if (freeze) {
+        if (freeze) { //If frozen
             frozen = true;
-            materialWater.SetColor("_Color", ice);
-            blocker.enabled = false;
+            materialWater.SetColor("_Color", ice); 
+            blocker.enabled = false; //Get rid of the blocker
         }
         else {
             frozen = false;
@@ -33,5 +41,6 @@ public class Williams_WaterController : MonoBehaviour
             blocker.enabled = true;
         }
     }
+
 
 }
