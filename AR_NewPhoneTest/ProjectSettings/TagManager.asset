@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Cloud
   - Ground
+  - Axe
+  - Tree
   layers:
   - Default
   - TransparentFX

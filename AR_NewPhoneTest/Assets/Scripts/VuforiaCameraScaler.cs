@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VuforiaCameraScaler : MonoBehaviour {
 
@@ -9,6 +10,7 @@ public class VuforiaCameraScaler : MonoBehaviour {
     public GameObject AnchorStage;
     //public Vector3 scaledObjectOrigin; //ARKit version
     public float cameraScale = 1.0f;
+    public Slider scaleSlider;
 
     // Use this for initialization
     void Start() {
@@ -18,6 +20,11 @@ public class VuforiaCameraScaler : MonoBehaviour {
     void ContentScaleChanged(float scale, float prevScale) {
         cameraScale = scale;
     }
+
+    public void UpdateScale() {
+        cameraScale = scaleSlider.value;
+    }
+
 
 
     void Update() {

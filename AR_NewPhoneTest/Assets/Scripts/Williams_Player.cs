@@ -5,6 +5,12 @@ using UnityEngine.AI;
 
 public class Williams_Player : MonoBehaviour {
 
+    public static Williams_Player instance;
+
+    private void Awake() {
+        instance = this;
+    }
+
     private NavMeshAgent myAgent;
     private Animator anim;
 
@@ -12,6 +18,8 @@ public class Williams_Player : MonoBehaviour {
 
     private bool active;
     public GameObject activeIndicator;
+
+    public bool hasAxe = false;
 
     private void Start() {
         myAgent = GetComponent<NavMeshAgent>();
@@ -34,7 +42,6 @@ public class Williams_Player : MonoBehaviour {
             activeIndicator.SetActive(true);
 
         #if UNITY_EDITOR
-            Debug.Log("Editor");
             if (Input.GetMouseButtonDown(0)) {
                 RaycastHit hit;
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -49,7 +56,6 @@ public class Williams_Player : MonoBehaviour {
         #endif
 
         #if UNITY_ANDROID
-            Debug.Log("Android");
             if (Input.touchCount > 0) {
                 RaycastHit hit;
                 Touch touch = Input.GetTouch(0);
@@ -75,12 +81,27 @@ public class Williams_Player : MonoBehaviour {
         }
     }
 
+    //private NavMeshPath path;
+    //public bool CanIReach(Vector3 point) {
+    //    path = new NavMeshPath();
+    //    int areaMask = NavMesh.GetAreaFromName("Not Walkable");
+    //    if(NavMesh.CalculatePath(transform.position, point, areaMask, path)) {
+    //        Debug.Log("Path Accessable");
+    //        return true;
+    //    }
+    //    else {
+    //        Debug.Log("Path no no");
+    //        return false;
+    //    }
+        
+    //}
 
-    private void GoToPoint(Vector3 point) {
+    public void GoToPoint(Vector3 point) {
         //Turn to look at destination
         transform.LookAt(point);
         //Start going
         myAgent.SetDestination(point);
+        
     }
 
     private void CheckActive() {
