@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
 
     public void SpawnPlayer() { //Spawn the player when called (called from NavMeshRest.cs)
-        Instantiate(player, spawnPoint.transform.position, Quaternion.identity);
+        Instantiate(player, spawnPoint.transform.position, spawnPoint.transform.rotation);
     }
 
 }

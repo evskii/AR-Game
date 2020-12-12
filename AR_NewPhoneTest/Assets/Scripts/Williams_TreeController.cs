@@ -79,6 +79,7 @@ public class Williams_TreeController : MonoBehaviour
 
     IEnumerator ChopTree() { //Delay for chopping tree
         yield return new WaitForSeconds(2);
+        Williams_Player.instance.wood++;
         Destroy(gameObject); //Replace with stump in future rather than destroying completely
     }
 }

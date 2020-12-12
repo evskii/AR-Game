@@ -26,28 +26,23 @@ public class Williams_CloudMove : MonoBehaviour
 
     void Update()
     {
-        if (Input.touchCount > 0) {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began) {
-                CheckTouch(); //call this every time the screen is touched (maybe not the most optimized)
-            }
-        }
-    }
+        if (Input.GetMouseButtonDown(0)) {
+            RaycastHit hit;
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-    void CheckTouch() {
-        RaycastHit hit;
-        Touch touch = Input.GetTouch(0);
-        Ray ray = cam.ScreenPointToRay(touch.position); //Raycast from where the player touched on the screen to the world
+            if (Physics.Raycast(ray, out hit)) { //If our raycast makes contact
+                if (hit.transform.tag == "Cloud") {
+                    if (!active) { //If the coud is not already active
+                        active = true; //Set active
+                        anim.SetTrigger("Coversun"); //Animate to cover the sun
+                        
+                    } else { //Do the opposite x
+                        active = false;
+                        anim.SetTrigger("UncoverSun");
+                        
 
-        if (Physics.Raycast(ray, out hit)) { //If our raycast makes contact
-            if (hit.transform.tag == "Cloud") { //Check to see if it's a cloud
-                if (!active) { //If the coud is not already active
-                    active = true; //Set active
-                    anim.SetTrigger("Coversun"); //Animate to cover the sun
-                }
-                else { //Do the opposite x
-                    active = false;
-                    anim.SetTrigger("UncoverSun");
+
+                    }
                 }
             }
         }
@@ -55,5 +50,12 @@ public class Williams_CloudMove : MonoBehaviour
 
     void FreezeWater() {
         Williams_WaterController.instance.Freeze(active); //Tells the water gameobject to freeze
+        GameManager.instance.sunCovered = active;
+        if (active) {
+            Williams_CabinMan.instance.GoInside();
+        } else {
+            Williams_CabinMan.instance.GoOutside();
+        }
+        
     }
 }

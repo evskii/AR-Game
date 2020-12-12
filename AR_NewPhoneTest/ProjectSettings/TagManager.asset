@@ -8,6 +8,8 @@ TagManager:
   - Ground
   - Axe
   - Tree
+  - Bridge
+  - CabinMan
   layers:
   - Default
   - TransparentFX
@@ -20,7 +22,7 @@ TagManager:
   - Ground
   - Cloud
   - Player
-  - 
+  - Ignore
   - 
   - 
   - 

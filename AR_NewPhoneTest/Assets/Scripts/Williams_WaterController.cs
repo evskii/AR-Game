@@ -26,6 +26,7 @@ public class Williams_WaterController : MonoBehaviour
 
     private void Start() {
         blocker = GetComponent<NavMeshObstacle>();
+        materialWater.SetColor("_Color", water);
     }
 
 

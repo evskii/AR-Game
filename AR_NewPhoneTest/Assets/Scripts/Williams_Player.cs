@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 public class Williams_Player : MonoBehaviour {
 
@@ -16,16 +17,17 @@ public class Williams_Player : MonoBehaviour {
 
     public Camera cam;
 
-    private bool active;
-    public GameObject activeIndicator;
-
     public bool hasAxe = false;
+
+    public GameObject locationMarker;
+    public GameObject currentLocationMarker;
+
+    //Resources
+    public int wood = 0;
 
     private void Start() {
         myAgent = GetComponent<NavMeshAgent>();
-        anim = GetComponent<Animator>();
-        active = false;
-        activeIndicator.SetActive(false);
+        anim = GetComponentInChildren<Animator>();
 
         GameObject arCamera = GameObject.Find("ARCamera");
         cam = arCamera.GetComponent<Camera>();
@@ -36,106 +38,46 @@ public class Williams_Player : MonoBehaviour {
 
     private void Update() {
 
-        CheckActive();
-
-        if (active) {
-            activeIndicator.SetActive(true);
-
-        #if UNITY_EDITOR
-            if (Input.GetMouseButtonDown(0)) {
-                RaycastHit hit;
-                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-                if (Physics.Raycast(ray, out hit)) {
-                    if(hit.transform.tag == "Ground") {
-                        GoToPoint(hit.point);
-                    }
+        //Change the player animation state when moving
+        if (myAgent.velocity.magnitude > 0f) {
+            anim.SetBool("Walking", true);
+            if (myAgent.remainingDistance < 0.05f) {
+                if (currentLocationMarker != null) {
+                    currentLocationMarker.GetComponent<Williams_LocationMarker>().DestroyMe();
                 }
             }
-
-        #endif
-
-        #if UNITY_ANDROID
-            if (Input.touchCount > 0) {
-                RaycastHit hit;
-                Touch touch = Input.GetTouch(0);
-                Ray ray = cam.ScreenPointToRay(touch.position);
-
-                if (Physics.Raycast(ray, out hit)) {
-                    if (hit.transform.tag == "Ground") {
-                        GoToPoint(hit.point);
-                    }
-                }
-            }
-        #endif
-            //Change the player animation state when moving
-            if (Mathf.Abs(myAgent.velocity.x) > 0.1 || Mathf.Abs(myAgent.velocity.y) > 0.1) {
-                anim.SetBool("Walking", true);
-            }
-            else {
-                anim.SetBool("Walking", false);
-            }
+        } else {
+            anim.SetBool("Walking", false);
         }
-        else {//Not Active
-            activeIndicator.SetActive(false);
+
+        if (EventSystem.current.IsPointerOverGameObject(0)) {
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0)) {
+            RaycastHit hit;
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit)) {
+                if(hit.transform.tag == "Ground") {
+                    if (currentLocationMarker != null) {
+                        currentLocationMarker.GetComponent<Williams_LocationMarker>().DestroyMe();
+                    }
+
+                    currentLocationMarker = Instantiate(locationMarker, hit.point, locationMarker.transform.rotation);
+                    GoToPoint(hit.point);
+
+                }
+            }
         }
     }
-
-    //private NavMeshPath path;
-    //public bool CanIReach(Vector3 point) {
-    //    path = new NavMeshPath();
-    //    int areaMask = NavMesh.GetAreaFromName("Not Walkable");
-    //    if(NavMesh.CalculatePath(transform.position, point, areaMask, path)) {
-    //        Debug.Log("Path Accessable");
-    //        return true;
-    //    }
-    //    else {
-    //        Debug.Log("Path no no");
-    //        return false;
-    //    }
-        
-    //}
 
     public void GoToPoint(Vector3 point) {
         //Turn to look at destination
         transform.LookAt(point);
         //Start going
         myAgent.SetDestination(point);
-        
     }
 
-    private void CheckActive() {
-#if UNITY_EDITOR
-        Debug.Log("Editor");
-        if (Input.GetMouseButtonDown(0)) {
-            RaycastHit hit;
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit)) {
-                if(hit.transform.tag == "Player") {
-                    active = !active;
-                }
-            }
-        }
-
-#endif
-
-#if UNITY_ANDROID
-        Debug.Log("Android");
-        if (Input.touchCount > 0) {
-            RaycastHit hit;
-            Touch touch = Input.GetTouch(0);
-            Ray ray = cam.ScreenPointToRay(touch.position);
-            if (touch.phase == TouchPhase.Began) {
-                if (Physics.Raycast(ray, out hit)) {
-                    if (hit.transform.tag == "Player") {
-                        active = !active;
-                    }
-                }
-            }
-            
-        }
-#endif
-    }
 
 }
