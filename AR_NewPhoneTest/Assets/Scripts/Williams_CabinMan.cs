@@ -30,6 +30,8 @@ public class Williams_CabinMan : MonoBehaviour
     public Transform outsideTransform;
     private Animator animController;
 
+    public GameObject door;
+
 
 
     private void Start() {
@@ -115,20 +117,28 @@ public class Williams_CabinMan : MonoBehaviour
     
 
     public void GoInside() {
+        Debug.Log("Inside");
         agent.enabled = true;
         animController.SetBool("walking", true);
         transform.LookAt(insideTransform.position);
         agent.GetComponent<NavMeshAgent>().SetDestination(insideTransform.position);
         inside = true;
+        StartCoroutine(WaitToClose());
     }
 
     public void GoOutside() {
+        door.GetComponent<Animator>().SetTrigger("Open");
         agent.enabled = true;
         animController.SetBool("walking", true);
         transform.LookAt(outsideTransform.position);
         agent.GetComponent<NavMeshAgent>().SetDestination(outsideTransform.position);
-        
+        Debug.Log("OUtside");
         inside = false;
+    }
+
+    IEnumerator WaitToClose() {
+        yield return new WaitForSeconds(1.5f);
+        door.GetComponent<Animator>().SetTrigger("Close");
     }
 
 }
