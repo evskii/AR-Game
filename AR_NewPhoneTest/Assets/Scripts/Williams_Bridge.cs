@@ -19,6 +19,10 @@ public class Williams_Bridge : MonoBehaviour
     public Button craftButton;
     private bool uiEnabled = false;
 
+    private GameObject player;
+    private bool playerWalking = false;
+    public GameObject standPoint;
+
 
 
     private void Start() {
@@ -59,23 +63,44 @@ public class Williams_Bridge : MonoBehaviour
             }
         }
 
-        
+        //When the player is walking towards the tree
+        if (playerWalking) {
+            if (Vector3.Distance(standPoint.transform.position, player.transform.position) <= 0.3f) { //If the player is close to or ontop of the standpoint
+                StartCoroutine(ConstructBridge());
+                playerWalking = false;
+            }
+        }
     }
 
 
     public void BuildBridge() {
-        Debug.Log("Build Bridge");
-        constructed = true;
+        WalkToBridge();
+        displaySpeechbubble(false);
+    }
 
+    public void WalkToBridge() {
+        player = GameObject.FindGameObjectWithTag("Player");
+        Williams_Player.instance.GoToPoint(standPoint.transform.position);
+        playerWalking = true;
+    }
+
+    IEnumerator ConstructBridge() {
+
+        player.transform.LookAt(transform.position);
+        player.GetComponentInChildren<Animator>().SetTrigger("Kneel");
+
+        yield return new WaitForSeconds(2.5f);
+
+        constructed = true;
 
         bridgeBroken.SetActive(false);
         bridgeConstructed.SetActive(true);
 
         NavMeshReset.instance.ImmediateRebuildMesh();
 
-        displaySpeechbubble(false);
-
         Williams_Player.instance.wood--;
+
+        this.enabled = false;
     }
 
     private bool CheckMaterials() {

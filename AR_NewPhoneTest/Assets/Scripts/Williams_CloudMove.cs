@@ -10,16 +10,14 @@ public class Williams_CloudMove : MonoBehaviour
      */
 
     private Camera cam; //Camera used for raycasting
-    public bool active = false; //Wether the cloud is active (covering sun) or !active (idle)
-    public Animator anim; //Suns animator (used to move its position, may change this in the future(animation independent is nicer)
-
-    public LayerMask cloudMask; //layer that the cloud is on (not completely neccesary cause of the transform.tag check but hey ;)
 
     private void Start() {
-        anim = GetComponent<Animator>(); //Self explanitory
 
         GameObject arCamera = GameObject.Find("ARCamera"); //Find the ARCamera in the scene
         cam = arCamera.GetComponent<Camera>(); //and reference our camera to it
+
+        startHeight = transform.position.y;
+        destinationHeight = startHeight + animHeight;
 
     }
 
@@ -32,30 +30,36 @@ public class Williams_CloudMove : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit)) { //If our raycast makes contact
                 if (hit.transform.tag == "Cloud") {
-                    if (!active) { //If the coud is not already active
-                        active = true; //Set active
-                        anim.SetTrigger("Coversun"); //Animate to cover the sun
-                        
-                    } else { //Do the opposite x
-                        active = false;
-                        anim.SetTrigger("UncoverSun");
-                        
-
-
-                    }
+                    //Rain
                 }
             }
         }
+
+        AnimateCloud();
     }
 
-    void FreezeWater() {
-        Williams_WaterController.instance.Freeze(active); //Tells the water gameobject to freeze
-        GameManager.instance.sunCovered = active;
-        if (active) {
-            Williams_CabinMan.instance.GoInside();
-        } else {
-            Williams_CabinMan.instance.GoOutside();
+    //Animate
+    public float animHeight;
+    public float lerpAmt;
+    public float stoppingDistance;
+    private float currentHeight;
+    private float startHeight;
+
+    private float destinationHeight;
+
+    public void AnimateCloud() {
+        currentHeight = transform.position.y;
+        float yPos = Mathf.Lerp(currentHeight, destinationHeight, lerpAmt);
+        Vector3 pos = new Vector3(transform.position.x, yPos, transform.position.z);
+        transform.position = pos;
+
+        if (Mathf.Abs((transform.position.y - destinationHeight)) < stoppingDistance) {
+            if (destinationHeight > startHeight) {
+                destinationHeight -= animHeight * 2;
+            } else {
+                destinationHeight += animHeight * 2;
+            }
+
         }
-        
     }
 }

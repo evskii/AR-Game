@@ -57,7 +57,7 @@ public class Williams_CampFire : MonoBehaviour
 
         WalkToFire();
         displaySpeechbubble(false);
-        Williams_Player.instance.wood--;
+        
 
     }
 
@@ -69,6 +69,7 @@ public class Williams_CampFire : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
 
         particleEffect.SetActive(true);
+        Williams_Player.instance.wood--;
 
         GameManager.instance.trinketsCollected++;
         GameManager.instance.DisplayTrinketText();

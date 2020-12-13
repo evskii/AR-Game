@@ -11,6 +11,7 @@ TagManager:
   - Bridge
   - CabinMan
   - CampFire
+  - Sun
   layers:
   - Default
   - TransparentFX
