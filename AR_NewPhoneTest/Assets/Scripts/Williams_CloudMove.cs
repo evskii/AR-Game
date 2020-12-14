@@ -10,6 +10,7 @@ public class Williams_CloudMove : MonoBehaviour
      */
 
     private Camera cam; //Camera used for raycasting
+    public GameObject rainParticles;
 
     private void Start() {
 
@@ -31,11 +32,21 @@ public class Williams_CloudMove : MonoBehaviour
             if (Physics.Raycast(ray, out hit)) { //If our raycast makes contact
                 if (hit.transform.tag == "Cloud") {
                     //Rain
+                    if (!rainParticles.GetComponent<ParticleSystem>().isPlaying) {
+                        rainParticles.GetComponent<ParticleSystem>().Play();
+                        StartCoroutine(StopRain());
+                    }
+                    
                 }
             }
         }
 
         AnimateCloud();
+    }
+
+    IEnumerator StopRain() {
+        yield return new WaitForSeconds(3);
+        rainParticles.GetComponent<ParticleSystem>().Stop();
     }
 
     //Animate

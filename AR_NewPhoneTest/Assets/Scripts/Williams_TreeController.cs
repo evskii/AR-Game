@@ -31,7 +31,10 @@ public class Williams_TreeController : MonoBehaviour
                 if (hit.transform.gameObject == gameObject) {
                     Debug.Log("Tree TIME");
                     WalkToTree();
-                    exclamationMark.SetActive(true);
+                    if (Williams_Player.instance.hasAxe) {
+                        exclamationMark.SetActive(true);
+                    }
+                    
                 }
             }
         }

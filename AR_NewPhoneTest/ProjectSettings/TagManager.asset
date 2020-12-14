@@ -12,6 +12,7 @@ TagManager:
   - CabinMan
   - CampFire
   - Sun
+  - Chimney
   layers:
   - Default
   - TransparentFX

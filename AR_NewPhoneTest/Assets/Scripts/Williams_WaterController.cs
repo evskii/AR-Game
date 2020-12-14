@@ -22,11 +22,14 @@ public class Williams_WaterController : MonoBehaviour
     public Color water; //Colour for when its water
     public Color ice; //Colour for when its ice
 
+    public GameObject icePlane;
+
     private NavMeshObstacle blocker; //The navmeshblocker that allows the player to move over the water or not
 
     private void Start() {
         blocker = GetComponent<NavMeshObstacle>();
         materialWater.SetColor("_Color", water);
+        icePlane.SetActive(false);
     }
 
 
@@ -35,11 +38,13 @@ public class Williams_WaterController : MonoBehaviour
             frozen = true;
             materialWater.SetColor("_Color", ice); 
             blocker.enabled = false; //Get rid of the blocker
+            icePlane.SetActive(true);
         }
         else {
             frozen = false;
             materialWater.SetColor("_Color", water);
             blocker.enabled = true;
+            icePlane.SetActive(false);
         }
     }
 
