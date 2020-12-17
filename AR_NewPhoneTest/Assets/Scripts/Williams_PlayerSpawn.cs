@@ -23,7 +23,7 @@ public class Williams_PlayerSpawn : MonoBehaviour
     }
 
     IEnumerator ChangeGameObject() {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(3.5f);
         Instantiate(player, transform.position, transform.rotation);
         Williams_CabinMan.instance.GoOutside();
         Destroy(gameObject);

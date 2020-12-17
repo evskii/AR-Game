@@ -38,5 +38,24 @@ public class GameManager : MonoBehaviour
         trinketText.enabled = false;
     }
 
+    public GameObject scalerText;
+    public GameObject HowToPlay;
+
+    public void CancelScalerText() {
+        StartCoroutine(DisableScalerText());
+    }
+
+    public IEnumerator DisableScalerText() {
+        yield return new WaitForSeconds(4f);
+        scalerText.SetActive(false);
+        HowToPlay.SetActive(true);
+        StartCoroutine(DisableTutText());
+    }
+
+    IEnumerator DisableTutText() {
+        yield return new WaitForSeconds(4f);
+        HowToPlay.SetActive(false);
+    }
+
 
 }
