@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.AI;
-
+using UnityEngine.SceneManagement;
 public class Williams_CabinMan : MonoBehaviour
 {
     public static Williams_CabinMan instance;
@@ -84,13 +84,31 @@ public class Williams_CabinMan : MonoBehaviour
             GoInside();
         }
 
-
+        if (playerWalking) {
+            if (Vector3.Distance(standPoint.transform.position, player.transform.position) <= 0.3f) { //If the player is close to or ontop of the standpoint
+                HandOverWood();
+                playerWalking = false;
+                Debug.Log("Hand it over");
+            }
+        }
 
     }
 
+    public GameObject standPoint;
+    public bool playerWalking = false;
+    public GameObject player;
+
     public void GiveWood() {
+        player = GameObject.FindGameObjectWithTag("Player");
+        Williams_Player.instance.GoToPoint(standPoint.transform.position);
+        playerWalking = true;
+
+    }
+
+    public void HandOverWood() {
         Williams_Player.instance.wood -= 2;
         displaySpeechbubble(false);
+        SceneManager.LoadScene("WinScene");
     }
 
 
